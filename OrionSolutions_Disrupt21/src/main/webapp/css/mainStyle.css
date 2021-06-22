@@ -1,0 +1,26 @@
+body{
+    background-color:#140D2E;
+}
+
+image {
+    overflow:visible;
+    opacity:0.6;
+}
+
+image:hover:not(.bgBanner){
+    cursor: pointer;
+    opacity:1;
+}
+
+
+.textStyle{
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+    text-align: justify;
+}
+
+@media (max-width: 600px){
+    html{
+        font-size: 10px;
+    }
+}

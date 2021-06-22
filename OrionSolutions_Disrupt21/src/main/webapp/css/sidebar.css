@@ -1,0 +1,16 @@
+.sidebarStyle{
+    color:#FFE700;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.navStyle{
+    background-image: url(../img/nav/bg.png);
+}
+
+.sidebarStyle:hover{
+    color:#F8A200;
+}
+
+.iconStyle{
+    color:#FFE700;
+}

@@ -1,0 +1,47 @@
+body{
+	overflow-x: hidden;
+}
+
+.objects{
+	width: 100vw;
+	height: 100vh;
+	background-image: url(../img/nav/bgPattenerCharacter.png);
+}
+
+.objects p{
+	font-size: 0.8rem;
+}
+
+.textStyle{
+    color:white;
+    font-family: 'Press Start 2P', cursive;
+    text-align: justify;
+    
+}
+
+.objectImg img{
+    width: 25vw;
+    height:25vh;
+    object-fit: cover;  
+    border-style: solid;
+    border-color: black;
+    border-width: 3px;
+    border-radius: 7px;  
+}
+
+
+.objectImg img:hover{
+    border-style: solid;
+    border-color:#FFE700;
+    border-width: 5px;
+}
+
+.imgInfo{
+	width: 45vw;
+    height: 75vh;
+    object-fit: cover;  
+    border-style: solid;
+    border-color: white;
+    border-width: 3px;
+    border-radius: 7px;
+}

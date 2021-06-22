@@ -1,0 +1,325 @@
+/** 
+-------------------------------- DDL ----------------------------------------- 
+**/
+
+DROP TABLE t_bttf_character CASCADE CONSTRAINTS;
+
+DROP TABLE t_bttf_character_object CASCADE CONSTRAINTS;
+
+DROP TABLE t_bttf_event CASCADE CONSTRAINTS;
+
+DROP TABLE t_bttf_image_character CASCADE CONSTRAINTS;
+
+DROP TABLE t_bttf_image_location CASCADE CONSTRAINTS;
+
+DROP TABLE t_bttf_location CASCADE CONSTRAINTS;
+
+DROP TABLE t_bttf_object CASCADE CONSTRAINTS;
+
+/** 
+Criamos uma tabela de Personagens mais relevantes do filme "Back To The Future" chamada: "t_bttf_character", com os seguintes atributos:
+"id_character", "nm_character", "ds_character" e "nm_actor".
+ **/
+CREATE TABLE t_bttf_character (
+    id_character  NUMBER(3) NOT NULL,
+    nm_character  VARCHAR2(60) NOT NULL,
+    ds_character  VARCHAR2(1000) NOT NULL,
+    nm_actor      VARCHAR2(60) NOT NULL
+);
+
+/** 
+Colocamos na tabela "t_bttf_character", Uma chave Primária no atributo "id_character" para identificar o Personagem. 		
+**/
+ALTER TABLE t_bttf_character ADD CONSTRAINT pk_bttf_character PRIMARY KEY ( id_character );
+
+/**
+Criamos uma tabela associativa das tabelas: "t_bttf_character" e "t_bttf_object", cujo nome é:"t_bttf_character_object",
+Pois vimos que era uma Relação N pra N, com o objetivo de identificar qual personagem usou aquele determinado objeto,
+para que nós possamos buscar no banco de uma maneira mais fácil e assim, ajudar na Descrição do personagem no nosso site. Com os atributos:
+"id_character(FK)" e "id_object(FK)". 
+**/
+CREATE TABLE t_bttf_character_object (
+    id_character  NUMBER(3) NOT NULL,
+    id_object     NUMBER(3) NOT NULL
+);
+
+/**
+Colocamos na tabela "t_bttf_character_object", duas chaves Primárias Estrangeiras das tabelas: "t_bttf_character" e "t_bttf_object". 
+**/
+ALTER TABLE t_bttf_character_object ADD CONSTRAINT pk_bttf_character_object PRIMARY KEY ( id_character,
+                                                                                          id_object );
+
+/**
+Criamos uma tabela associativa das tabelas: "t_bttf_character" e "t_bttf_location", cujo nome é: "t_bttf_event", pois vimos que seria uma relação N pra N, com o objetivo de identificar eventos que ocorre naquela localização com diferentes personagens. Com os atributos: "id_event(PK)" , "id_location(FK)", "id_character(FK)", "nm_event", "ds_event", "url_image" e "dt_event".  
+**/
+CREATE TABLE t_bttf_event (
+    id_event      NUMBER(3) NOT NULL,
+    id_location   NUMBER(4) NOT NULL,
+    id_character  NUMBER(3) NOT NULL,
+    nm_event      VARCHAR2(60) NOT NULL,
+    ds_event      VARCHAR2(1000) NOT NULL,
+    url_image     VARCHAR2(1000) NOT NULL,
+    dt_event      DATE NOT NULL
+);
+
+/**
+Colocamos na tabela "t_bttf_event", uma chave primária:"id_event", para identificar o evento e 2 chaves estrangeiras: "id_location" e "id_character".
+**/
+ALTER TABLE t_bttf_event ADD CONSTRAINT pk_bttf_event PRIMARY KEY ( id_event );
+
+/**
+Criamos uma tabela multivalorada chamada: "t_bttf_image_character", pois vimos que o personagem poderá ter 1 ou N imagens,
+para assim armazenar várias imagens do mesmo personagem, com os atributos: "id_character(FK)", "id_image(PK)", "url_image" e "ds_image". 
+**/
+CREATE TABLE t_bttf_image_character (
+    id_image      NUMBER(3) NOT NULL,
+    id_character  NUMBER(3) NOT NULL,
+    url_image     VARCHAR2(1000) NOT NULL,
+    ds_image      VARCHAR2(1000) NOT NULL
+);
+
+/**
+Colocamos na tabela "t_bttf_image_character", uma chave primária:"id_image", para identificar a imagem e uma chave Primária Estrangeira:"id_character", pois vimos
+que essa tabela depende da tabela "t_bttf_character" para existir.
+**/
+ALTER TABLE t_bttf_image_character ADD CONSTRAINT pk_bttf_image_character PRIMARY KEY ( id_image,
+                                                                                        id_character );
+/**
+Criamos uma tabela multivalorada chamada: "t_bttf_image_location", pois vimos que a localidade poderá ter 1 ou N imagens,
+para assim armazenar várias imagens da mesma localidade, com os atributos: "id_image(PK)", "id_location(FK)", "url_image" e "ds_image". 
+**/
+CREATE TABLE t_bttf_image_location (
+    id_image     NUMBER(3) NOT NULL,
+    id_location  NUMBER(4) NOT NULL,
+    url_image    VARCHAR2(1000) NOT NULL,
+    ds_image     VARCHAR2(1000) NOT NULL
+);
+
+/**
+Colocamos na tabela "t_bttf_image_location", uma chave primária:"id_image", para identificar a imagem e uma chave Primária Estrangeira:"id_location", pois vimos
+que essa tabela depende da tabela "t_bttf_location" para existir.
+**/
+ALTER TABLE t_bttf_image_location ADD CONSTRAINT pk_bttf_image_location PRIMARY KEY ( id_image,
+                                                                                      id_location );
+
+/**
+Criamos a Tabela de Localizações mais relevantes do filme "Back To The Future" chamada: "t_bttf_location", com os seguintes atributos: "id_location(PK)", "nm_location" e "ds_location".
+**/
+CREATE TABLE t_bttf_location (
+    id_location  NUMBER(4) NOT NULL,
+    nm_location  VARCHAR2(80) NOT NULL,
+    ds_location  VARCHAR2(1000) NOT NULL
+);
+
+/**
+Colocamos na tabela "t_bttf_location", uma chave primária no atributo: "id_location", para identificar a localização.  
+**/
+ALTER TABLE t_bttf_location ADD CONSTRAINT pk_bttf_location PRIMARY KEY ( id_location );
+
+/**
+Criamos a Tabela de Objetos mais importantes do filme "Back To The Future" chamada: "t_bttf_object",com os seguintes atributos: "id_object(PK)", "nm_object", "ds_object" e "url_image". 
+**/
+CREATE TABLE t_bttf_object (
+    id_object  NUMBER(3) NOT NULL,
+    nm_object  VARCHAR2(80) NOT NULL,
+    ds_object  VARCHAR2(1000) NOT NULL,
+    url_image  VARCHAR2(1000) NOT NULL
+);
+
+/**
+Colocamos na tabela "t_bttf_location", uma chave primária no atributo: "id_object", para identificar o objeto.
+**/
+ALTER TABLE t_bttf_object ADD CONSTRAINT pk_bttf_object PRIMARY KEY ( id_object );
+
+/**
+Relacionamos a tabela "t_bttf_character" com a tabela "t_bttf_event". 1 pra N.
+**/
+ALTER TABLE t_bttf_event
+    ADD CONSTRAINT fk_bttf_character_event FOREIGN KEY ( id_character )
+        REFERENCES t_bttf_character ( id_character );
+
+/**
+Relacionamos a tabela "t_bttf_character" com a tabela "t_bttf_character_object". 1 pra N.
+**/
+ALTER TABLE t_bttf_character_object
+    ADD CONSTRAINT fk_bttf_character_object FOREIGN KEY ( id_character )
+        REFERENCES t_bttf_character ( id_character );
+
+/**
+Relacionamos a tabela "t_bttf_character" com a tabela "t_bttf_image_character". 1 pra N.
+**/
+ALTER TABLE t_bttf_image_character
+    ADD CONSTRAINT fk_bttf_image_character FOREIGN KEY ( id_character )
+        REFERENCES t_bttf_character ( id_character );
+
+/**
+Relacionamos a tabela "t_bttf_location" com a tabela "t_bttf_image_location". 1 pra N.
+**/
+ALTER TABLE t_bttf_image_location
+    ADD CONSTRAINT fk_bttf_image_location FOREIGN KEY ( id_location )
+        REFERENCES t_bttf_location ( id_location );
+
+/**
+Relacionamos a tabela "t_bttf_location" com a tabela "t_bttf_event". 1 pra N.
+**/
+ALTER TABLE t_bttf_event
+    ADD CONSTRAINT fk_bttf_location_event FOREIGN KEY ( id_location )
+        REFERENCES t_bttf_location ( id_location );
+/**
+Relacionamos a tabela "t_bttf_object" com a tabela "t_bttf_character_object". 1 pra N.
+**/
+ALTER TABLE t_bttf_character_object
+    ADD CONSTRAINT fk_bttf_object_character FOREIGN KEY ( id_object )
+        REFERENCES t_bttf_object ( id_object );
+
+
+/**
+----------------------------------- DML ---------------------------------------
+**/
+
+
+/**
+DROP SEQUENCE SQ_T_BTTF_CHARACTER;
+
+DROP SEQUENCE SQ_T_BTTF_LOCATION;
+
+DROP SEQUENCE SQ_T_BTTF_OBJECT;
+
+DROP SEQUENCE SQ_T_BTTF_IMAGE_CHARACTER;
+
+DROP SEQUENCE SQ_T_BTTF_IMAGE_LOCATION;
+
+DROP SEQUENCE SQ_T_BTTF_EVENT;
+**/
+
+/**
+SEQUENCES DE TODAS AS TABELAS
+**/
+CREATE SEQUENCE SQ_T_BTTF_CHARACTER INCREMENT BY 1 START WITH 1;
+
+CREATE SEQUENCE SQ_T_BTTF_LOCATION INCREMENT BY 1 START WITH 1;
+
+CREATE SEQUENCE SQ_T_BTTF_OBJECT INCREMENT BY 1 START WITH 1;
+
+CREATE SEQUENCE SQ_T_BTTF_IMAGE_CHARACTER INCREMENT BY 1 START WITH 1;
+
+CREATE SEQUENCE SQ_T_BTTF_IMAGE_LOCATION INCREMENT BY 1 START WITH 1;
+
+CREATE SEQUENCE SQ_T_BTTF_EVENT INCREMENT BY 1 START WITH 1;
+
+INSERT INTO T_BTTF_CHARACTER (id_character, nm_character, ds_character, nm_actor) VALUES (SQ_T_BTTF_CHARACTER.NEXTVAL, 'George McFly', 'Pai de Marty McFly. George Sofria bullying na época do colégio pelo seu arquinimigo Biff, mas ao ver sua futura esposa Lorraine sendo abusada pelo Biff, confrotou o próprio e Lorraine acabou se apaixonando por George.', 'Crispin Glover');
+
+INSERT INTO T_BTTF_CHARACTER (id_character, nm_character, ds_character, nm_actor) VALUES (SQ_T_BTTF_CHARACTER.NEXTVAL, 'Lorraine McFly', 'Mãe de Marty McFly e esposa de George McFly, Lorraine ao ver seu filho que veio do futuro se apaixona por ele, mas seu filho fez ela se apaixonar pelo seu pai George McFly.', 'Lea Thompson');
+
+INSERT INTO T_BTTF_CHARACTER (id_character, nm_character, ds_character, nm_actor) VALUES (SQ_T_BTTF_CHARACTER.NEXTVAL, 'Biff', 'Biff é o Vilão do filme De Volta para o Futuro. Biff, Um valentão no colégio que praticava Bullying em diversas pessoas, mas principalmente no George McFly, pai de Marty.', 'Thomas F. Wilson');
+
+INSERT INTO T_BTTF_CHARACTER (id_character, nm_character, ds_character, nm_actor) VALUES (SQ_T_BTTF_CHARACTER.NEXTVAL, 'Marty McFly', 'Marty é o Protagonista do Filme De Volta Para o Futuro. Marty é um garoto Jovem e namora a personagem Jennifer e grande amigo do Doutor Emmett Brown. Com a invenção do Delorean feita pelo doutor, marty foi capaz de viajar no tempo.', 'Michael J. Fox');
+
+INSERT INTO T_BTTF_CHARACTER (id_character, nm_character, ds_character, nm_actor) VALUES (SQ_T_BTTF_CHARACTER.NEXTVAL, 'Doctor Emmett Brown','Doctor Emmett Brown é um cientista que inventou o delorean capaz de viajar no tempo e tem com ele sempre seu fiel amigo Einstein que usa como experimento para seus projetos.', 'Christopher Lloyd');
+
+INSERT INTO T_BTTF_CHARACTER (id_character, nm_character, ds_character, nm_actor) VALUES (SQ_T_BTTF_CHARACTER.NEXTVAL, 'Einstein', 'Einstein é um cachorro do Doctor Emmett Brown, ele era usado como cobaia para experimentos do doutor, com isso Einstein foi o primeiro viajante no tempo, após viajar 1 minuto para o futuro.', 'Tiger');
+
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Escola', 'Lugar onde ocorre as principais cenas do filme.');
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Bar', 'Lugar onde ocorre o confronto do Marty McFly e do Valentão Biff.');
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Casa do Marty', 'Após Marty McFly viajar no tempo a casa de seus pais sofre uma grande mudança visualmente.');
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Praça Central de Rio Valley', 'Lugar onde ocorre o queda de um raio na torre do relógio, capaz de fazer Marty Conseguir viajar para o futuro.');
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Estacionamento do Shopping', 'Lugar onde ocorre a viagem do Marty McFly para o passado e o confronto dos libios com o doutor Emmett Brown.');
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Casa dos Pais de Lorraine', 'Lugar onde ocorre o encontro de lorraine e marty.');
+
+INSERT INTO T_BTTF_LOCATION (id_location, nm_location, ds_location) VALUES (SQ_T_BTTF_LOCATION.NEXTVAL, 'Laboratório', 'Lugar onde ocorre os experimentos do doutor e o encontro entre eles, após marty viajar para o passado.');
+
+INSERT INTO T_BTTF_OBJECT (id_object, nm_object, ds_object, url_image) VALUES (SQ_T_BTTF_OBJECT.NEXTVAL, 'Delorean', 'Um carro desenvolvido pelo doutor Emmett Brown capaz de viajar para o futuro ou passado. através de um capacitador de fluxo ele consegue viajar para qualquer ano, data e hora que desejar quando alcança a velocidade de 140KM por hora, Delorean tem aparição no ano de 1985 e 1955, sendo usado pelo cachorro do doutor "Einsten" e pelo protagonista do filme "Marty".', 'img/object/delorean.png');
+
+INSERT INTO T_BTTF_OBJECT (id_object, nm_object, ds_object, url_image) VALUES (SQ_T_BTTF_OBJECT.NEXTVAL, 'Relógio', 'O relógio da torre foi bastante importante para a volta de marty ao presente, onde ele no futuro sabia que cairia um raio no relógio, para assim o doutor emmett brown conseguir gerar uma fonte de energia de 1,21 gigawatts para o capacitador de fluxo funcionar.', 'img/object/relogio.png');
+
+INSERT INTO T_BTTF_OBJECT (id_object, nm_object, ds_object, url_image) VALUES (SQ_T_BTTF_OBJECT.NEXTVAL, 'Plutônio', 'M elemento capaz de gerar a energia necessária para que o capacitador de fluxo possa funcionar e consequentemente a viagem no tempo irá acontecer, vista disso o doutor emmett brown engana os libios e acaba roubando o plutônio deles tendo consequências logo após.', 'img/object/plutonio.png' );
+
+INSERT INTO T_BTTF_OBJECT (id_object, nm_object, ds_object, url_image) VALUES (SQ_T_BTTF_OBJECT.NEXTVAL, 'Foto Família', 'Uma foto onde tem os irmão de marty, terá um papel importante para existencia de marty e seus irmãos. vendo que com a ida ao passado alterou a sua linha do tempo e consequentemente a sua existência após fazer suas escolhas naquela época. marty tenta mudar o que fez, e acaba juntando a sua mãe Lorraine e seu pai George denovo, fazendo com que não acabe com sua existencia e voltando para o presente novamente.', 'img/object/foto.png' );
+
+INSERT INTO T_BTTF_OBJECT (id_object, nm_object, ds_object, url_image) VALUES (SQ_T_BTTF_OBJECT.NEXTVAL, 'Colete Marty', 'Na época em que o marty viajou para o passado, muitos confundiam o seu colete com uma bóia, pois era muito moderno para aquela época.', 'img/object/colete.png');
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (4, 4);
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (4, 5);
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (4, 2);
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (5, 1);
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (5, 2);
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (5, 3);
+
+INSERT INTO T_BTTF_CHARACTER_OBJECT(id_character, id_object) VALUES (6, 1);
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (1, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/george_young.png','George 1955'); 
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (1, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/george_old.png','George 1985');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (2, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/lorraine_young.png','Lorraine 1955');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (2, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/lorraine_old.png','Lorraine 1985');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (3, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/biff_young.png','Biff 1955');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (3, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/biff_old.png','Biff 1985');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (4, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/marty.png','Marty');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (5, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/doctor_young.png','Doctor 1955');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (5, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/doctor_old.png','Doctor 1985');
+
+INSERT INTO T_BTTF_IMAGE_CHARACTER(id_character, id_image, url_image, ds_image) VALUES (6, SQ_T_BTTF_IMAGE_CHARACTER.NEXTVAL, 'img/character/einstein.png','Einstein');
+
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 1, 'img/location/escola1.png', 'Escola');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 1, 'img/location/escola2.png', 'Escola');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 2, 'img/location/bar1.png', 'Bar');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 3, 'img/location/casa1.png', 'Casa do Morty');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 3, 'img/location/casa2.png', 'Casa do Morty');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 4, 'img/location/relogio1.png', 'Praça');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 4, 'img/location/relogio2.png', 'Praça');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 5, 'img/location/shopping1.png', 'Shopping');
+
+INSERT INTO T_BTTF_IMAGE_LOCATION(id_image, id_location, url_image, ds_image) VALUES (SQ_T_BTTF_IMAGE_LOCATION.NEXTVAL, 5, 'img/location/shopping2.png', 'Shopping');
+
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 5, 5, 'Suposta morte do Doctor Brown' , 'Após roubar plutônio dos libios, doutor é perseguido por eles e acaba sendo atacado com tiros.', 'img/event/evento1.png', to_date('26/08/1985', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 4, 4, 'Marty vai para o passado' , 'Após ver doutor sendo atacado pelos libios, Marty usa o delorean para fugir e acaba viajando para o ano de 1955.', 'img/event/evento2.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 2, 4, 'Martin encontra seu pai jovem' , 'Ao chegar no ano de 1955, Marty entra em um bar e acaba encontrando seu pai do passado após confusão com Biff.', 'img/event/evento3.jpg', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 6, 4, 'Marty salva o pai e é atropelado em seu lugar' , 'Vendo mãe de Marty (Lorraine) pela janela em uma árvore, George escorrega e cai no meio da Rua onde estava passando um carro, mas Marty seu filho, o salva e acaba sendo atropelado no lugar dele.', 'img/event/evento4.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 6, 4, 'Marty encontra sua mãe jovem ' , 'Após Marty ser atropelado, ele se hospeda na casa dos pais de sua futura mãe Lorraine, que acaba sentindo uma atração por ele.', 'img/event/evento5.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 7, 4, 'Marty encontra o doctor jovem' , 'Saindo da casa dos pais de Lorraine, Marty vai em direção ao laboratório do doutor Emmett Brown em busca de ajuda para entender o que tava acontecendo.', 'img/event/evento6.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 7, 4, 'Marty descobre que muda o futuro' , 'Marty descobre que consegue mudar o futuro ao olhar a foto que ele levou para o passado, ao ver seus irmãos sumirem após alterar a linha do tempo.', 'img/event/evento7.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 1, 4, 'Marty tenta fazer a mãe se apaixonar pelo pai' , 'Marty tenta convencer seu pai George a chamar Lorraine para o baile da escola, mas Lorraine não aceita e quer ir com Marty.', 'img/event/evento8.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 1, 1, 'Pai do Marty salva a mãe dos braços de Biff' , 'Após Biff confrontar Marty, lorraine é pega pelas mão do próprio, mas acaba sendo salva pelo seu futuro marido George.', 'img/event/evento9.png', to_date('26/08/1955', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 4, 4, 'Marty volta para o ano de 1985' , 'Após cair um raio no relógio da torre , Marty consegue o 1,21 gigawatts necessário para conseguir alimentar o capacitador de fluxo e assim conseguindo viajar para o ano de 1985.', 'img/event/evento10.png', to_date('26/08/1985', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 4, 4, 'Marty descobre que sua carta salva o doctor Brown' , 'Antes de viajar para o ano de 1985, Marty deixa uma carta para o Doutor, cujo essa carta só poderia ser aberta no ano de 1985, com o intuito de salvar o Doutor do ataque dos líbios. Chegando em 1985 Marty descobre que sua carta salva o doutor e muda o futuro.', 'img/event/evento11.png', to_date('26/08/1985', 'DD/MM/YYYY'));
+
+INSERT INTO T_BTTF_EVENT(id_event, id_location, id_character, nm_event, ds_event, url_image, dt_event) VALUES(SQ_T_BTTF_EVENT.NEXTVAL, 3, 4, 'Futuro está diferente' , 'Chegando de volta em casa, Marty percebe que sua ida para o passado mudou totalmente o presente e as características de seus pais.', 'img/event/evento12.png', to_date('26/08/1985', 'DD/MM/YYYY'));
+
+COMMIT;
